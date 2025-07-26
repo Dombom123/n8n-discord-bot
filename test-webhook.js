@@ -31,7 +31,7 @@ async function testWebhook() {
     
     console.log('✅ Success! Response:', response.status, response.data);
   } catch (error) {
-    console.log('❌ Error:', error.response?.status, error.response?.data || error.message);
+    console.log('❌ Error:', error.response && error.response.status, error.response && error.response.data || error.message);
   }
 }
 

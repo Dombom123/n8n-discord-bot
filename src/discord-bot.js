@@ -120,7 +120,7 @@ class DiscordBot {
       isReady: this.client.isReady(),
       guildId: this.guildId,
       channelId: this.channelId,
-      botName: this.client.user?.tag || 'Not logged in'
+      botName: (this.client.user && this.client.user.tag) || 'Not logged in'
     };
   }
 }

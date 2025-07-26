@@ -14,7 +14,7 @@ class WebhookClient {
         author: {
           id: messageData.author.id,
           username: messageData.author.username,
-          displayName: messageData.member?.displayName || messageData.author.username
+          displayName: (messageData.member && messageData.member.displayName) || messageData.author.username
         },
         channelId: messageData.channelId,
         guildId: messageData.guildId,
@@ -55,7 +55,7 @@ class WebhookClient {
       logger.error('Failed to send message to n8n webhook', {
         messageId: messageData.id,
         error: error.message,
-        status: error.response?.status
+        status: error.response && error.response.status
       });
       throw error;
     }
