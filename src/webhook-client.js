@@ -29,10 +29,19 @@ class WebhookClient {
 
       logger.info('Sending message to n8n webhook', { messageId: messageData.id });
       
-      const response = await axios.post(this.webhookUrl, payload, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
+      // Convert payload to URL parameters for GET request
+      const params = new URLSearchParams();
+      params.append('messageId', payload.messageId);
+      params.append('content', payload.content);
+      params.append('authorId', payload.author.id);
+      params.append('authorUsername', payload.author.username);
+      params.append('authorDisplayName', payload.author.displayName);
+      params.append('channelId', payload.channelId);
+      params.append('guildId', payload.guildId);
+      params.append('timestamp', payload.timestamp);
+      params.append('attachments', JSON.stringify(payload.attachments));
+
+      const response = await axios.get(`${this.webhookUrl}?${params.toString()}`, {
         timeout: 10000 // 10 second timeout
       });
 

@@ -1,0 +1,169 @@
+{
+  "name": "discord agent",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "7290e8f0-868d-465c-aede-07592dd59860",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        -96
+      ],
+      "id": "6c4fd3f7-b21b-4198-ac32-9309212520c6",
+      "name": "Webhook",
+      "webhookId": "7290e8f0-868d-465c-aede-07592dd59860"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query.content }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -160,
+        -80
+      ],
+      "id": "91b65c2b-6743-45d2-8bc0-a74df92d2671",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-20250514",
+          "cachedResultName": "Claude 4 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -224,
+        112
+      ],
+      "id": "dbd744b6-b8ec-4046-bd49-17ab007dcdda",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "9srTl4FJm7etNvMj",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=test-123",
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -112,
+        160
+      ],
+      "id": "4aa4e23a-ff23-45e8-b1b2-0f1bc50d3b84",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1396221102459715594",
+          "mode": "list",
+          "cachedResultName": "Humans with tools",
+          "cachedResultUrl": "https://discord.com/channels/1396221102459715594"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1396581118928617584",
+          "mode": "list",
+          "cachedResultName": "agent",
+          "cachedResultUrl": "https://discord.com/channels/1396221102459715594/1396581118928617584"
+        },
+        "content": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        192,
+        -96
+      ],
+      "id": "dcde7672-92ca-4644-8559-44b75f65078e",
+      "name": "Send a message",
+      "webhookId": "e0572dda-41f9-4b73-8887-04a9663e5fbb",
+      "credentials": {
+        "discordBotApi": {
+          "id": "fF9QaiuKFPlDL3xZ",
+          "name": "Discord Bot account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "11c80b1a-3019-4fd4-9dac-d311175afe40",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e3364245145e7de2b4df2d85f45d43564ce8ce22ffe02596c0d9d15ebc7f856a"
+  },
+  "id": "NyWdMOSjAPsU0Ic0",
+  "tags": []
+}

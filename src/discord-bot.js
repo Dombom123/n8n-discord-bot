@@ -33,16 +33,42 @@ class DiscordBot {
     // Message create event
     this.client.on(Events.MessageCreate, async (message) => {
       try {
+        logger.info('Message received (debug)', {
+          messageId: message.id,
+          channelId: message.channelId,
+          guildId: message.guildId,
+          author: message.author.username,
+          isBot: message.author.bot,
+          content: message.content.substring(0, 50) + (message.content.length > 50 ? '...' : '')
+        });
+
         // Ignore bot messages
-        if (message.author.bot) return;
+        if (message.author.bot) {
+          logger.info('Ignoring bot message', { messageId: message.id });
+          return;
+        }
 
         // Only process messages from the specified channel
-        if (message.channelId !== this.channelId) return;
+        if (message.channelId !== this.channelId) {
+          logger.info('Message from different channel', { 
+            messageId: message.id, 
+            receivedChannelId: message.channelId, 
+            expectedChannelId: this.channelId 
+          });
+          return;
+        }
 
         // Only process messages from the specified guild
-        if (message.guildId !== this.guildId) return;
+        if (message.guildId !== this.guildId) {
+          logger.info('Message from different guild', { 
+            messageId: message.id, 
+            receivedGuildId: message.guildId, 
+            expectedGuildId: this.guildId 
+          });
+          return;
+        }
 
-        logger.info('Received message', {
+        logger.info('Processing message for n8n', {
           messageId: message.id,
           author: message.author.username,
           content: message.content.substring(0, 100) + (message.content.length > 100 ? '...' : '')
